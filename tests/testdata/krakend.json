@@ -1,0 +1,112 @@
+{
+  "$schema": "https://www.krakend.io/schema/v2.4/krakend.json",
+  "version": 3,
+  "endpoints": [
+    {
+      "endpoint": "/pet",
+      "method": "PUT",
+      "backend": []
+    },
+    {
+      "endpoint": "/pet",
+      "method": "POST",
+      "backend": []
+    },
+    {
+      "endpoint": "/pet/findByStatus",
+      "method": "GET",
+      "input_query_strings": [
+        "status"
+      ],
+      "backend": []
+    },
+    {
+      "endpoint": "/pet/findByTags",
+      "method": "GET",
+      "input_query_strings": [
+        "tags"
+      ],
+      "backend": []
+    },
+    {
+      "endpoint": "/pet/{petId}",
+      "method": "GET",
+      "backend": []
+    },
+    {
+      "endpoint": "/pet/{petId}",
+      "method": "POST",
+      "input_query_strings": [
+        "name",
+        "status"
+      ],
+      "backend": []
+    },
+    {
+      "endpoint": "/pet/{petId}",
+      "method": "DELETE",
+      "backend": []
+    },
+    {
+      "endpoint": "/pet/{petId}/uploadImage",
+      "method": "POST",
+      "input_query_strings": [
+        "additionalMetadata"
+      ],
+      "backend": []
+    },
+    {
+      "endpoint": "/user",
+      "method": "POST",
+      "backend": []
+    },
+    {
+      "endpoint": "/user/createWithList",
+      "method": "POST",
+      "backend": []
+    },
+    {
+      "endpoint": "/user/login",
+      "method": "GET",
+      "input_query_strings": [
+        "username",
+        "password"
+      ],
+      "backend": [
+        {
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "response"
+                ],
+                "name": "Cache-Control",
+                "value": "max-age=0, must-revalidate, private"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/user/logout",
+      "method": "GET",
+      "backend": []
+    },
+    {
+      "endpoint": "/user/{username}",
+      "method": "GET",
+      "backend": []
+    },
+    {
+      "endpoint": "/user/{username}",
+      "method": "PUT",
+      "backend": []
+    },
+    {
+      "endpoint": "/user/{username}",
+      "method": "DELETE",
+      "backend": []
+    }
+  ]
+}
