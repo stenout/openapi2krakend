@@ -5,9 +5,9 @@ namespace OpenApi2KrakenD;
 /**
  * @param array $krakenDConfig {@see KrakenD::__construct()}
  */
-function convert(OpenApi $openApi, array $krakenDConfig = []): KrakenD
+function convert(OpenApi $openApi, string $host, array $krakenDConfig = []): KrakenD
 {
-    $krakenD = new KrakenD($krakenDConfig);
+    $krakenD = new KrakenD($host,$krakenDConfig);
 
     foreach ($openApi->paths() as $path => $pathData) {
         $methods = array_keys($pathData);
@@ -27,7 +27,16 @@ function convert(OpenApi $openApi, array $krakenDConfig = []): KrakenD
                 $endpoint['input_query_strings'] = $queryStrings;
             }
 
-            $endpoint['backend'] = getBackend($pathData[$method]['responses']['200'] ?? []);
+            $backend =  [
+                'url_pattern' => $path,
+                'method' => strtoupper($method),
+                'host' => [$krakenD->host],
+            ];
+            $extraConfig = getExtraConfig($pathData[$method]['responses']['200'] ?? []);
+            if (!empty($extraConfig)) {
+                $backend['extra_config'] = $extraConfig;
+            }
+            $endpoint['backend'][] = $backend;
 
             $krakenD->addEndpoint($endpoint);
         }
@@ -51,24 +60,21 @@ function getQueryStrings(array $parameters): array
     return array_values($queryStrings);
 }
 
-function getBackend(array $response): array
+function getExtraConfig(array $response): array
 {
-    $backend = [];
+    $extraConfig = [];
     $cacheHeader = $response['headers']['Cache-Control'] ?? [];
-
     if (!empty($cacheHeader)) {
-        $backend[] = [
-            'extra_config' => [
-                'modifier/martian' => [
-                    'header.Modifier' => [
-                        'scope' => ['response'],
-                        'name' => 'Cache-Control',
-                        'value' => $cacheHeader['schema']['example'],
-                    ],
+        $extraConfig = [
+            'modifier/martian' => [
+                'header.Modifier' => [
+                    'scope' => ['response'],
+                    'name' => 'Cache-Control',
+                    'value' => $cacheHeader['schema']['example'],
                 ],
             ],
         ];
     }
 
-    return $backend;
+    return $extraConfig;
 }

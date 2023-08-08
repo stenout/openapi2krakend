@@ -14,7 +14,7 @@ class FunctionsTest extends TestCase
     {
         $this->assertEquals(
             $krakendJson,
-            \OpenApi2KrakenD\convert($openApi)->toPrettyJson()
+            \OpenApi2KrakenD\convert( $openApi, 'https://krakend.test')->toPrettyJson()
         );
     }
 

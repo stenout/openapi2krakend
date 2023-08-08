@@ -1,16 +1,33 @@
 {
   "$schema": "https://www.krakend.io/schema/v2.4/krakend.json",
   "version": 3,
+  "disable_rest": true,
   "endpoints": [
     {
       "endpoint": "/pet",
       "method": "PUT",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet",
+          "method": "PUT",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet",
       "method": "POST",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet",
+          "method": "POST",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet/findByStatus",
@@ -18,7 +35,15 @@
       "input_query_strings": [
         "status"
       ],
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet/findByStatus",
+          "method": "GET",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet/findByTags",
@@ -26,12 +51,28 @@
       "input_query_strings": [
         "tags"
       ],
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet/findByTags",
+          "method": "GET",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet/{petId}",
       "method": "GET",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet/{petId}",
+          "method": "GET",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet/{petId}",
@@ -40,12 +81,28 @@
         "name",
         "status"
       ],
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet/{petId}",
+          "method": "POST",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet/{petId}",
       "method": "DELETE",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet/{petId}",
+          "method": "DELETE",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/pet/{petId}/uploadImage",
@@ -53,17 +110,41 @@
       "input_query_strings": [
         "additionalMetadata"
       ],
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/pet/{petId}/uploadImage",
+          "method": "POST",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/user",
       "method": "POST",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/user",
+          "method": "POST",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/user/createWithList",
       "method": "POST",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/user/createWithList",
+          "method": "POST",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/user/login",
@@ -74,6 +155,11 @@
       ],
       "backend": [
         {
+          "url_pattern": "/user/login",
+          "method": "GET",
+          "host": [
+            "https://krakend.test"
+          ],
           "extra_config": {
             "modifier/martian": {
               "header.Modifier": {
@@ -91,22 +177,54 @@
     {
       "endpoint": "/user/logout",
       "method": "GET",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/user/logout",
+          "method": "GET",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/user/{username}",
       "method": "GET",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/user/{username}",
+          "method": "GET",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/user/{username}",
       "method": "PUT",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/user/{username}",
+          "method": "PUT",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     },
     {
       "endpoint": "/user/{username}",
       "method": "DELETE",
-      "backend": []
+      "backend": [
+        {
+          "url_pattern": "/user/{username}",
+          "method": "DELETE",
+          "host": [
+            "https://krakend.test"
+          ]
+        }
+      ]
     }
   ]
 }

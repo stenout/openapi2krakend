@@ -7,17 +7,22 @@ class KrakenD
     const DEFAULT_CONFIG = [
         '$schema' => 'https://www.krakend.io/schema/v2.4/krakend.json',
         'version' => 3,
+        'disable_rest' => true,
     ];
 
+    public string $host;
     private array $data;
 
     /**
+     * @param string $host
      * @param array{
      *     "$schema": string,
-     *     "version": int
+     *     "version": int,
+     *     "disable_rest": bool,
      * } $config
      */
-    public function __construct(array $config = []) {
+    public function __construct(string $host, array $config = []) {
+        $this->host = $host;
         $this->data = array_merge(self::DEFAULT_CONFIG, $config);
     }
 

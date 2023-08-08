@@ -12,29 +12,35 @@ class KrakenDTest extends TestCase
      * @covers KrakenD::__construct
      * @dataProvider dataForTestConstruct
      */
-    public function testConstruct(array $config, array $expected)
+    public function testConstruct(string $host, array $config, array $expectedConfig)
     {
-        $krakenD = new KrakenD($config);
+        $krakenD = new KrakenD($host, $config);
         $reflectionKrakenD = new ReflectionClass('OpenApi2KrakenD\KrakenD');
         $actual = $reflectionKrakenD->getProperty('data')->getValue($krakenD);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($host, $krakenD->host);
+        $this->assertEquals($expectedConfig, $actual);
     }
 
     public static function dataForTestConstruct(): iterable
     {
+        $host = 'https://krakend.test';
+
         yield 'default config' => [
+            'host' => $host,
             'config' => [],
-            'expected' => KrakenD::DEFAULT_CONFIG,
+            'expectedConfig' => KrakenD::DEFAULT_CONFIG,
         ];
 
         $config = [
             '$schema' => 'https://www.krakend.io/schema/v2.1/krakend.json',
             'version' => 2,
+            'disable_rest' => false,
         ];
         yield 'custom config' => [
+            'host' => $host,
             'config' => $config,
-            'expected' => $config,
+            'expectedConfig' => $config,
         ];
     }
 }
