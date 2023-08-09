@@ -12,7 +12,18 @@
           "method": "PUT",
           "host": [
             "https://krakend.test"
-          ]
+          ],
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "response"
+                ],
+                "name": "Cache-Control",
+                "value": "max-age=0, must-revalidate, private"
+              }
+            }
+          }
         }
       ]
     },

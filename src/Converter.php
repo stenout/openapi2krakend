@@ -4,8 +4,12 @@ namespace OpenApi2KrakenD;
 
 class Converter
 {
-    public static function convert(OpenApi $openApi, KrakenD $krakenD): KrakenD
+    private OpenApi $openApi;
+
+    public function convert(OpenApi $openApi, KrakenD $krakenD): KrakenD
     {
+        $this->openApi = $openApi;
+
         $endpoints = [];
         foreach ($openApi->paths() as $path => $pathData) {
             $methods = array_keys($pathData);
@@ -20,7 +24,7 @@ class Converter
                     'method' => strtoupper($method),
                 ];
 
-                $queryStrings = self::getQueryStrings($pathData[$method]['parameters'] ?? []);
+                $queryStrings = $this->getQueryStrings($pathData[$method]['parameters'] ?? []);
                 if (!empty($queryStrings)) {
                     $endpoint['input_query_strings'] = $queryStrings;
                 }
@@ -30,7 +34,7 @@ class Converter
                     'method' => strtoupper($method),
                     'host' => [$krakenD->host],
                 ];
-                $extraConfig = self::getExtraConfig($pathData[$method]['responses']['200'] ?? []);
+                $extraConfig = $this->getExtraConfig($pathData[$method]['responses']['200'] ?? []);
                 if (!empty($extraConfig)) {
                     $backend['extra_config'] = $extraConfig;
                 }
@@ -40,13 +44,13 @@ class Converter
             }
         }
 
-        $cleanEndPoints = self::removeDuplicateEndpoints($endpoints);
+        $cleanEndPoints = $this->removeDuplicateEndpoints($endpoints);
         $krakenD->addEndpoints($cleanEndPoints);
 
         return $krakenD;
     }
 
-    private static function getQueryStrings(array $parameters): array
+    private function getQueryStrings(array $parameters): array
     {
         $queryParameters = array_filter(
             $parameters,
@@ -61,11 +65,14 @@ class Converter
         return array_values($queryStrings);
     }
 
-    private static function getExtraConfig(array $response): array
+    private function getExtraConfig(array $response): array
     {
         $extraConfig = [];
         $cacheHeader = $response['headers']['Cache-Control'] ?? [];
         if (!empty($cacheHeader)) {
+            if (array_key_exists('$ref', $cacheHeader)) {
+                $cacheHeader = $this->getRef($cacheHeader['$ref']);
+            }
             $extraConfig = [
                 'modifier/martian' => [
                     'header.Modifier' => [
@@ -80,17 +87,29 @@ class Converter
         return $extraConfig;
     }
 
+    private function getRef(string $ref): array
+    {
+        $result = [];
+
+        $keys = explode('/', str_replace('#/components/', '', $ref));
+        foreach ($keys as $key) {
+            $result = $result[$key] ?? $this->openApi->components()[$key] ?? [];
+        }
+
+        return $result;
+    }
+
     /**
      * Удаляет записи, в соответствии с особенностями обработки путей в KrakenD, например:
      * /user/{name} и /user/login воспринимаются как дубли, независимо от того, в каком порядке они расположены.
      */
-    private static function removeDuplicateEndpoints(array $endpoints): array
+    private function removeDuplicateEndpoints(array $endpoints): array
     {
         $endpointPaths = array_column($endpoints, 'endpoint');
 
         foreach ($endpoints as $key => $endpoint) {
             foreach ($endpointPaths as $path) {
-                if (self::isEndpointsMatch($path, $endpoint['endpoint']) && $path !== $endpoint['endpoint']) {
+                if ($this->isEndpointsMatch($path, $endpoint['endpoint']) && $path !== $endpoint['endpoint']) {
                     unset($endpoints[$key]);
                 }
             }
@@ -99,7 +118,7 @@ class Converter
         return array_values($endpoints);
     }
 
-    private static function isEndpointsMatch($endpoint1, $endpoint2): bool
+    private function isEndpointsMatch($endpoint1, $endpoint2): bool
     {
         $endpoint1Parts = explode('/', trim($endpoint1, '/'));
         $endpoint2Parts = explode('/', trim($endpoint2, '/'));

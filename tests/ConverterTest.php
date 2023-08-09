@@ -17,7 +17,7 @@ class ConverterTest extends TestCase
         $krakenD = new KrakenD('https://krakend.test');
         $this->assertEquals(
             $krakendJson,
-            Converter::convert($openApi, $krakenD)->toPrettyJson()
+            (new Converter())->convert($openApi, $krakenD)->toPrettyJson()
         );
     }
 

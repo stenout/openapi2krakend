@@ -77,6 +77,11 @@
         "responses": {
           "200": {
             "description": "Successful operation",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Cache-Control"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -988,6 +993,14 @@
     }
   },
   "components": {
+    "headers": {
+      "Cache-Control": {
+        "schema": {
+          "schema": "string",
+          "example": "max-age=0, must-revalidate, private"
+        }
+      }
+    },
     "schemas": {
       "Order": {
         "type": "object",
