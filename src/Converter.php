@@ -80,15 +80,50 @@ class Converter
         return $extraConfig;
     }
 
+    /**
+     * Удаляет записи, в соответствии с особенностями обработки путей в KrakenD, например:
+     * /user/{name} и /user/login воспринимаются как дубли, независимо от того, в каком порядке они расположены.
+     */
     private static function removeDuplicateEndpoints(array $endpoints): array
     {
-        $cleanEndPoints = [];
-        foreach ($endpoints as $endpoint) {
-            if (!in_array($endpoint['endpoint'], $cleanEndPoints)) {
-                $cleanEndPoints[] = $endpoint;
+        $endpointPaths = array_column($endpoints, 'endpoint');
+
+        foreach ($endpoints as $key => $endpoint) {
+            foreach ($endpointPaths as $path) {
+                if (self::isEndpointsMatch($path, $endpoint['endpoint']) && $path !== $endpoint['endpoint']) {
+                    unset($endpoints[$key]);
+                }
             }
         }
 
-        return $cleanEndPoints;
+        return array_values($endpoints);
+    }
+
+    private static function isEndpointsMatch($endpoint1, $endpoint2): bool
+    {
+        $endpoint1Parts = explode('/', trim($endpoint1, '/'));
+        $endpoint2Parts = explode('/', trim($endpoint2, '/'));
+
+        if (count($endpoint1Parts) !== count($endpoint2Parts)) {
+            return false;
+        }
+
+        foreach ($endpoint1Parts as $key => $endpoint1Part) {
+            $patterns = [
+                '/\./',
+                '/\{.*\}/',
+            ];
+            $replacements = [
+                '\.',
+                '.*',
+            ];
+            // Экранируем точки и заменяем конструкции {variable} на .*
+            $endpoint1Part = preg_replace($patterns, $replacements, $endpoint1Part);
+            if (preg_match("/$endpoint1Part/", $endpoint2Parts[$key]) === 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

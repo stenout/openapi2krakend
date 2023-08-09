@@ -30,38 +30,6 @@
       ]
     },
     {
-      "endpoint": "/pet/findByStatus",
-      "method": "GET",
-      "input_query_strings": [
-        "status"
-      ],
-      "backend": [
-        {
-          "url_pattern": "/pet/findByStatus",
-          "method": "GET",
-          "host": [
-            "https://krakend.test"
-          ]
-        }
-      ]
-    },
-    {
-      "endpoint": "/pet/findByTags",
-      "method": "GET",
-      "input_query_strings": [
-        "tags"
-      ],
-      "backend": [
-        {
-          "url_pattern": "/pet/findByTags",
-          "method": "GET",
-          "host": [
-            "https://krakend.test"
-          ]
-        }
-      ]
-    },
-    {
       "endpoint": "/pet/{petId}",
       "method": "GET",
       "backend": [
@@ -134,28 +102,11 @@
       ]
     },
     {
-      "endpoint": "/user/createWithList",
-      "method": "POST",
-      "backend": [
-        {
-          "url_pattern": "/user/createWithList",
-          "method": "POST",
-          "host": [
-            "https://krakend.test"
-          ]
-        }
-      ]
-    },
-    {
-      "endpoint": "/user/login",
+      "endpoint": "/user/{username}",
       "method": "GET",
-      "input_query_strings": [
-        "username",
-        "password"
-      ],
       "backend": [
         {
-          "url_pattern": "/user/login",
+          "url_pattern": "/user/{username}",
           "method": "GET",
           "host": [
             "https://krakend.test"
@@ -171,32 +122,6 @@
               }
             }
           }
-        }
-      ]
-    },
-    {
-      "endpoint": "/user/logout",
-      "method": "GET",
-      "backend": [
-        {
-          "url_pattern": "/user/logout",
-          "method": "GET",
-          "host": [
-            "https://krakend.test"
-          ]
-        }
-      ]
-    },
-    {
-      "endpoint": "/user/{username}",
-      "method": "GET",
-      "backend": [
-        {
-          "url_pattern": "/user/{username}",
-          "method": "GET",
-          "host": [
-            "https://krakend.test"
-          ]
         }
       ]
     },
