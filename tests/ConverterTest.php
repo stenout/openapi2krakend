@@ -2,19 +2,22 @@
 
 namespace OpenApi2KrakenD\Tests;
 
+use OpenApi2KrakenD\Converter;
+use OpenApi2KrakenD\KrakenD;
 use OpenApi2KrakenD\OpenApi;
 use PHPUnit\Framework\TestCase;
 
-class FunctionsTest extends TestCase
+class ConverterTest extends TestCase
 {
     /**
      * @dataProvider dataForConvert
      */
     public function testConvert(OpenApi $openApi, string $krakendJson)
     {
+        $krakenD = new KrakenD('https://krakend.test');
         $this->assertEquals(
             $krakendJson,
-            \OpenApi2KrakenD\convert( $openApi, 'https://krakend.test')->toPrettyJson()
+            Converter::convert($openApi, $krakenD)->toPrettyJson()
         );
     }
 

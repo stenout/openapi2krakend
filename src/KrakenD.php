@@ -26,9 +26,9 @@ class KrakenD
         $this->data = array_merge(self::DEFAULT_CONFIG, $config);
     }
 
-    public function addEndpoint(array $endpoint): void
+    public function addEndpoints(array $endpoints): void
     {
-        $this->data['endpoints'][] = $endpoint;
+        $this->data['endpoints'] = $endpoints;
     }
 
     public function toJson(): string

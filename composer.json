@@ -2,9 +2,6 @@
     "name": "stenout/openapi2krakend",
     "type": "library",
     "autoload": {
-        "files": [
-            "src/functions.php"
-        ],
         "psr-4": {
             "OpenApi2KrakenD\\": "src/",
             "OpenApi2KrakenD\\Tests\\": "tests/"

@@ -25,4 +25,10 @@ class OpenApi
     {
         return $this->data['paths'];
     }
+
+    public function toKrakenD(string $host, array $config = []): KrakenD
+    {
+        $krakenD = new KrakenD($host, $config);
+        return Converter::convert($this, $krakenD);
+    }
 }
